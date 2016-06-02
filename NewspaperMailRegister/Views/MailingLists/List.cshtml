@@ -1,0 +1,50 @@
+﻿@model NewspaperMailRegister.Models.MailingListViewModel
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Mailing Lists</h2>
+
+@using (Html.BeginForm("List", "MailingLists", FormMethod.Get))
+{
+    <p>
+        Find by email: @Html.TextBox("searchString")
+        <input type="submit" value="Search" />
+    </p>
+}
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.ActionLink("Name", "List", new { sortOrder = ViewBag.NameSortParm })
+        </th>
+        <th>
+            @Html.ActionLink("Email", "List", new { sortOrder = ViewBag.EmailSortParam })
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model.MailingLists) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Email)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+        </td>
+    </tr>
+}
+
+</table>
+
+<br />
+
+@Html.PagedListPager(Model.MailingLists, page => Url.Action("List",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
